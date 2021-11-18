@@ -22,13 +22,25 @@ setup(
     long_description=README,
     long_description_content_type="text/markdown",
     url='https://github.com/brando90/ultimate-aws-cv-task2vec',
-    author='Brando Miranda',
+    author='Brando Miranda (adapted from original aws, credits, to them)',
     author_email='brandojazz@gmail.com',
     python_requires='>=3.9.0',
     license='Apache License 2.0',
     packages=find_packages(),
     install_requires=['torch>=1.9.0',
                       'torchvision>=0.10.0',
-                      'tqdm'
+                      'tqdm',
+                      'seaborn',
+                      'scipy',
+                      'matplotlib',
+                      'omegaconf',
+                      'fastcluster',
+                      # torch
+                      # torchvision
+                      'numpy',
+                      'pandas',
+                      'hydra-core',
+                      'sklearn',
+                      'tqdm',
                       ]
 )

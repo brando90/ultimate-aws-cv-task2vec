@@ -95,8 +95,11 @@ class Task2Vec:
         if self.skip_layers > 0:
             dataset = torch.utils.data.TensorDataset(self.model.layers[self.skip_layers].input_features,
                                                      self.model.layers[-1].targets)
+
+        dataset.eval()
         self.compute_fisher(dataset)
         embedding = self.extract_embedding(self.model)
+        dataset.train()
         return embedding
 
     def montecarlo_fisher(self, dataset: Dataset, epochs: int = 1):
