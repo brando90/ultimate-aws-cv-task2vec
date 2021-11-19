@@ -173,7 +173,7 @@ def get_normalized_embeddings(embeddings, normalization=None):
     return F, normalization
 
 
-def pdist(embeddings, distance='cosine'):
+def pdist(embeddings, distance='cosine') -> np.ndarray:
     distance_fn = _DISTANCES[distance]
     n = len(embeddings)
     distance_matrix = np.zeros([n, n])
@@ -213,6 +213,23 @@ def plot_distance_matrix(embeddings, labels=None, distance='cosine'):
     sns.clustermap(distance_matrix, row_linkage=linkage_matrix, col_linkage=linkage_matrix, cmap='viridis_r')
     plt.show()
 
+def plot_distance_matrix_from_distance_matrix(distance_matrix: np.ndarray, labels=None):
+    import seaborn as sns
+    from scipy.cluster.hierarchy import linkage
+    from scipy.spatial.distance import squareform
+    import pandas as pd
+    import matplotlib.pyplot as plt
+    # distance_matrix = pdist(embeddings, distance=distance)
+    cond_distance_matrix = squareform(distance_matrix, checks=False)
+    linkage_matrix = linkage(cond_distance_matrix, method='complete', optimal_ordering=True)
+    if labels is not None:
+        distance_matrix = pd.DataFrame(distance_matrix, index=labels, columns=labels)
+    sns.clustermap(distance_matrix, row_linkage=linkage_matrix, col_linkage=linkage_matrix, cmap='viridis_r')
+    plt.show()
 
-
-
+def stats_of_distance_matrix(distance_matrix: np.ndarray, diagonal: bool = False) -> tuple[float, float]:
+    if not diagonal:
+        # - remove diagonal: ref https://stackoverflow.com/questions/46736258/deleting-diagonal-elements-of-a-numpy-array
+        distance_matrix = distance_matrix[~np.eye(distance_matrix.shape[0], dtype=bool)].reshape(distance_matrix.shape[0], -1)
+    mu, std = distance_matrix.mean(), distance_matrix.std()
+    return mu, std
