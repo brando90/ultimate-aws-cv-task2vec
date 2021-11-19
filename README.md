@@ -2,6 +2,8 @@
 
 For general advice for installation see the readme our other machine learning repo: https://github.com/brando90/ultimate-utils
 
+`pip install kora`
+
 # Task2Vec 
 
 This is an implementation of the Task2Vec method described in the paper [Task2Vec: Task Embedding for Meta-Learning](https://arxiv.org/abs/1902.03545).
