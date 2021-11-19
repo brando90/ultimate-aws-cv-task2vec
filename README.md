@@ -2,7 +2,7 @@
 
 For general advice for installation see the readme our other machine learning repo: https://github.com/brando90/ultimate-utils
 
-`pip install kora`
+`pip install git@github.com:brando90/ultimate-aws-cv-task2vec.git`
 
 # Task2Vec 
 
