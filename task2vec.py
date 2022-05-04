@@ -35,6 +35,7 @@ class Embedding:
         - the diagonal of the Fisher Information Matrix for each layer.
         - embedding size should be the size of the total number of filters for the network.
     """
+
     def __init__(self, hessian, scale, meta=None):
         self.hessian = np.array(hessian)
         self.scale = np.array(scale)
@@ -111,29 +112,6 @@ class Task2Vec:
         self.compute_fisher(dataset)
         embedding = self.extract_embedding(self.model)
         # dataset.train()  # returns to using the support set
-        return embedding
-
-    def embed2(self, dataset: Dataset):
-        # Cache the last layer features (needed to train the classifier) and (if needed) the intermediate layer features
-        # so that we can skip the initial layers when computing the embedding
-        # dataset.train()  # I added this so that the training is done in the support set
-        # if self.skip_layers > 0:
-        #     self._cache_features(dataset, indexes=(self.skip_layers, -1), loader_opts=self.loader_opts,
-        #                          max_samples=self.max_samples)
-        # else:
-        #     self._cache_features(dataset, max_samples=self.max_samples)
-        # Fits the last layer classifier using cached features
-        dataset.train()
-        self._fit_classifier(**self.classifier_opts)
-        #
-        # if self.skip_layers > 0:
-        #     dataset = torch.utils.data.TensorDataset(self.model.layers[self.skip_layers].input_features,
-        #                                              self.model.layers[-1].targets)
-
-        dataset.eval()  # I added this so that the embedding is computed on the val set
-        self.compute_fisher(dataset)
-        embedding = self.extract_embedding(self.model)
-        dataset.train()  # returns to using the support set
         return embedding
 
     def montecarlo_fisher(self, dataset: Dataset, epochs: int = 1):
