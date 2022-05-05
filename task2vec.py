@@ -144,6 +144,8 @@ class Task2Vec:
                     if p.grad is not None:
                         p.grad2_acc += p.grad.data ** 2
                         p.grad_counter += 1
+                break  # for debugging faster, otherwise FIM is really slow
+            break  # for debugging faster, otherwise FIM is really slow
         for p in self.model.parameters():
             if p.grad_counter == 0:
                 del p.grad2_acc
@@ -308,6 +310,7 @@ class Task2Vec:
                 optimizer.step()
                 metrics.update(n=data.size(0), loss=loss.item(), error=error)
             logging.info(f"[epoch {epoch}]: " + "\t".join(f"{k}: {v}" for k, v in metrics.avg.items()))
+        print(f'\nfinal loss after fitting final layer {loss=}')
 
     def extract_embedding(self, model: ProbeNetwork):
         """
