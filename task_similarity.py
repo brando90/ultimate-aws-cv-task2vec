@@ -199,7 +199,7 @@ def cdist(from_embeddings, to_embeddings, distance='cosine'):
     return distance_matrix
 
 
-def plot_distance_matrix(embeddings, labels=None, distance='cosine'):
+def plot_distance_matrix(embeddings, labels=None, distance='cosine', show_plot=True):
     import seaborn as sns
     from scipy.cluster.hierarchy import linkage
     from scipy.spatial.distance import squareform
@@ -211,9 +211,10 @@ def plot_distance_matrix(embeddings, labels=None, distance='cosine'):
     if labels is not None:
         distance_matrix = pd.DataFrame(distance_matrix, index=labels, columns=labels)
     sns.clustermap(distance_matrix, row_linkage=linkage_matrix, col_linkage=linkage_matrix, cmap='viridis_r')
-    plt.show()
+    if show_plot:
+        plt.show()
 
-def plot_distance_matrix_from_distance_matrix(distance_matrix: np.ndarray, labels=None):
+def plot_distance_matrix_from_distance_matrix(distance_matrix: np.ndarray, labels=None, show_plot=True):
     import seaborn as sns
     from scipy.cluster.hierarchy import linkage
     from scipy.spatial.distance import squareform
@@ -225,7 +226,8 @@ def plot_distance_matrix_from_distance_matrix(distance_matrix: np.ndarray, label
     if labels is not None:
         distance_matrix = pd.DataFrame(distance_matrix, index=labels, columns=labels)
     sns.clustermap(distance_matrix, row_linkage=linkage_matrix, col_linkage=linkage_matrix, cmap='viridis_r')
-    plt.show()
+    if show_plot:
+        plt.show()
 
 def stats_of_distance_matrix(distance_matrix: np.ndarray,
                              remove_diagonal: bool = True,
@@ -234,6 +236,9 @@ def stats_of_distance_matrix(distance_matrix: np.ndarray,
     if remove_diagonal:
         # - remove diagonal: ref https://stackoverflow.com/questions/46736258/deleting-diagonal-elements-of-a-numpy-array
         distance_matrix = distance_matrix[~np.eye(distance_matrix.shape[0], dtype=bool)].reshape(distance_matrix.shape[0], -1)
+
+    # - flatten
+    distance_matrix: np.ndarray = distance_matrix.flatten()
 
     # - compute stats of distance matrix
     if variance_type == 'std':
