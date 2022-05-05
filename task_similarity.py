@@ -227,9 +227,20 @@ def plot_distance_matrix_from_distance_matrix(distance_matrix: np.ndarray, label
     sns.clustermap(distance_matrix, row_linkage=linkage_matrix, col_linkage=linkage_matrix, cmap='viridis_r')
     plt.show()
 
-def stats_of_distance_matrix(distance_matrix: np.ndarray, diagonal: bool = False) -> tuple[float, float]:
-    if not diagonal:
+def stats_of_distance_matrix(distance_matrix: np.ndarray,
+                             remove_diagonal: bool = True,
+                             variance_type: str = 'ci_0.95',
+                             ) -> tuple[float, float]:
+    if remove_diagonal:
         # - remove diagonal: ref https://stackoverflow.com/questions/46736258/deleting-diagonal-elements-of-a-numpy-array
         distance_matrix = distance_matrix[~np.eye(distance_matrix.shape[0], dtype=bool)].reshape(distance_matrix.shape[0], -1)
-    mu, std = distance_matrix.mean(), distance_matrix.std()
-    return mu, std
+
+    # - compute stats of distance matrix
+    if variance_type == 'std':
+        mu, var = distance_matrix.mean(), distance_matrix.std()
+    elif variance_type == 'ci_0.95':
+        from uutils.torch_uu.metrics.confidence_intervals import mean_confidence_interval
+        mu, var = mean_confidence_interval(distance_matrix, confidence=0.95)
+    else:
+        raise ValueError(f'Invalid variance type, got: {variance_type=}')
+    return mu, var
