@@ -214,6 +214,17 @@ def plot_distance_matrix(embeddings, labels=None, distance='cosine', show_plot=T
     if show_plot:
         plt.show()
 
+def plot_distance_matrix_heatmap_only(embeddings, labels=None, distance='cosine', show_plot=True):
+    import seaborn as sns
+    import pandas as pd
+    import matplotlib.pyplot as plt
+    distance_matrix = pdist(embeddings, distance=distance)
+    if labels is not None:
+        distance_matrix = pd.DataFrame(distance_matrix, index=labels, columns=labels)
+    sns.heatmap(distance_matrix, cmap='viridis_r')
+    if show_plot:
+        plt.show()
+
 def plot_distance_matrix_from_distance_matrix(distance_matrix: np.ndarray, labels=None, show_plot=True):
     import seaborn as sns
     from scipy.cluster.hierarchy import linkage
