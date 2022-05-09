@@ -248,7 +248,9 @@ def stats_of_distance_matrix(distance_matrix: np.ndarray,
         # - remove diagonal: ref https://stackoverflow.com/questions/46736258/deleting-diagonal-elements-of-a-numpy-array
         triu: np.ndarray = np.triu(distance_matrix)
         tril: np.ndarray = np.tril(distance_matrix)
-        distance_matrix = distance_matrix[~np.eye(distance_matrix.shape[0], dtype=bool)].reshape(distance_matrix.shape[0], -1)
+        # distance_matrix = distance_matrix[~np.eye(distance_matrix.shape[0], dtype=bool)].reshape(distance_matrix.shape[0], -1)
+        # remove diagonal and dummy zeros where the other triangular matrix was artificially placed.
+        distance_matrix = triu[triu != 0.0]
 
     # - flatten
     distance_matrix: np.ndarray = distance_matrix.flatten()
@@ -266,8 +268,14 @@ def stats_of_distance_matrix(distance_matrix: np.ndarray,
     if remove_diagonal:
         from uutils.torch_uu import approx_equal
         assert approx_equal(triu.sum(), tril.sum(), tolerance=1e-4), f'Distance matrix is not symmetric, are you sure this is correct?'
-        assert approx_equal(mu, triu[triu != 0.0].mean(), tolerance=1e-4), f'Mean should be equal to triangular matrix'
-        # assert triu.sum() == tril.sum(), f'Distance matrix is not symmetric, are you sure this is correct?'
-        # assert mu == triu[triu != 0.0].mean(), f'Mean should be equal to triangular matrix'
+        assert approx_equal(distance_matrix.mean(), triu[triu != 0.0].mean(), tolerance=1e-4), f'Mean should be equal to triangular matrix'
+        assert approx_equal(mu, triu[triu != 0.0].mean(), tolerance=1e-4)
+        #
+        _, var2 = mean_confidence_interval(distance_matrix.flatten(), confidence=0.95)
+        # mu, var = mean_confidence_interval(triu, confidence=0.95)
+        # print(f'{var=} (ci from triu)')
+        # print(f'{var2=} (ci from distance_matrix)')
+        # print(f'std={triu[triu != 0.0].std()=}')
+        # print(f'std2={distance_matrix.std()=}')
     return mu, var
 
