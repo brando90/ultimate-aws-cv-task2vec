@@ -270,12 +270,5 @@ def stats_of_distance_matrix(distance_matrix: np.ndarray,
         assert approx_equal(triu.sum(), tril.sum(), tolerance=1e-4), f'Distance matrix is not symmetric, are you sure this is correct?'
         assert approx_equal(distance_matrix.mean(), triu[triu != 0.0].mean(), tolerance=1e-4), f'Mean should be equal to triangular matrix'
         assert approx_equal(mu, triu[triu != 0.0].mean(), tolerance=1e-4)
-        #
-        _, var2 = mean_confidence_interval(distance_matrix.flatten(), confidence=0.95)
-        # mu, var = mean_confidence_interval(triu, confidence=0.95)
-        # print(f'{var=} (ci from triu)')
-        # print(f'{var2=} (ci from distance_matrix)')
-        # print(f'std={triu[triu != 0.0].std()=}')
-        # print(f'std2={distance_matrix.std()=}')
     return mu, var
 
