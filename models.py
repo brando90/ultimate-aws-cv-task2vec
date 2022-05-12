@@ -43,6 +43,10 @@ class ResNet(resnet.ResNet, ProbeNetwork):
     def classifier(self):
         return self.fc
 
+    # @property
+    # def cls(self):
+    #     return self.fc
+
     # @ProbeNetwork.classifier.setter
     # def classifier(self, val):
     #     self.fc = val
